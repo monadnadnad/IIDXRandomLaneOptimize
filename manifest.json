@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Random Lane Ticket Tool",
+    "version": "1.0.1",
+    "permissions": [
+      "activeTab",
+      "storage",
+      "tabs"
+    ],
+    "action": {
+      "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html"],
+      "default_popup": "dist/popup.html"
+    },
+    "content_scripts": [
+        {
+          "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html"],
+          "js": ["dist/content.js"],
+          "run_at": "document_end"
+        }
+      ]
+}
