@@ -5,7 +5,9 @@ interface TextageSongInfos {
 }
 
 const textageSongInfos: TextageSongInfos = data;
+const textageSongTitles: string[] = Object.keys(textageSongInfos);
 
 export {
-  textageSongInfos
+  textageSongInfos,
+  textageSongTitles
 }
