@@ -12,10 +12,11 @@
       "default_popup": "dist/popup.html"
     },
     "content_scripts": [
-        {
-          "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html"],
-          "js": ["dist/content.js"],
-          "run_at": "document_end"
-        }
-      ]
+      {
+        "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html"],
+        "js": ["dist/content.js"],
+        "run_at": "document_end"
+      }
+    ],
+    "options_page": "dist/options.html"
 }

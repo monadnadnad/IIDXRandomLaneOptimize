@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     popup: path.join(__dirname, 'src', 'popup', 'index.tsx'),
+    options: path.join(__dirname, 'src', 'options', 'index.tsx'),
     content: path.join(__dirname, 'src', 'content.ts'),
     search: path.join(__dirname, 'src', 'search.ts')
   },
@@ -35,6 +36,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/popup/popup.html',
       filename: 'popup.html',
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/options/options.html',
+      filename: 'options.html'
     }),
   ],
   devtool: 'cheap-module-source-map' // これがないとUncaught EvalErrorになる
