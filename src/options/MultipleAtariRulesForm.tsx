@@ -28,7 +28,6 @@ export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
     .rules
     .map(rule => new BasicAtariRule(rule.matcher.rule, rule.title).option(rule.allowOption));
   const [title, setTitle] = useState<string | undefined>(multipleAtariRules.title);
-  const [newRules, setNewRules] = useState<BasicAtariRule[]>(clonedBasicAtariRules);
 
   const { register, handleSubmit, control } = useForm<FormValues>({
     defaultValues: {
@@ -42,11 +41,6 @@ export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
     control,
   });
   
-  const onAtariRuleChange = useCallback((index: number, ruleString: string, allowOption: AllowOption) => {
-    const newBasicAtariRule = new BasicAtariRule(ruleString).option(allowOption);
-    setNewRules(newRules.map((rule, i) => i === index ? newBasicAtariRule: rule));
-  }, []);
-
   return (
     <div>
       <p>{title}</p>

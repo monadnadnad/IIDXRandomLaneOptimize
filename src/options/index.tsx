@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { getMultipleAtariRulesAll } from "../storage";
+import { getMultipleAtariRulesAll, testInitStorage } from "../storage";
 import { MultipleAtariRules } from "../search";
 import { MultipleAtariRulesForm } from "./MultipleAtariRulesForm";
 
@@ -21,6 +21,7 @@ const Options: React.FC = () => {
           <MultipleAtariRulesForm multipleAtariRules={data} key={index} />
         )}
       </ul>
+      <button onClick={testInitStorage}>Init</button>
     </div>
   );
 };
