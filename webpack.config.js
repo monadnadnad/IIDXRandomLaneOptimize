@@ -6,7 +6,8 @@ module.exports = {
     popup: path.join(__dirname, 'src', 'popup', 'index.tsx'),
     options: path.join(__dirname, 'src', 'options', 'index.tsx'),
     content: path.join(__dirname, 'src', 'content.ts'),
-    search: path.join(__dirname, 'src', 'search.ts')
+    search: path.join(__dirname, 'src', 'search.ts'),
+    storage: path.join(__dirname, 'src', 'storage.ts'),
   },
   output: {
     filename: '[name].js',

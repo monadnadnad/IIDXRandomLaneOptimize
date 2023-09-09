@@ -97,7 +97,7 @@ class MultipleMatcher implements Matcher {
 
 class MultipleAtariRules implements AtariRule {
   title?: string;
-  matcher: Matcher;
+  matcher: MultipleMatcher;
   constructor(rules: BasicAtariRule[], title?: string) {
     this.title = title;
     this.matcher = new MultipleMatcher(rules);
@@ -151,6 +151,7 @@ const defaultAtariRules = [
 
 export {
   AtariRule,
+  AllowOption,
   BasicAtariRule,
   BasicMatcher,
   Matcher,
