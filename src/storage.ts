@@ -44,9 +44,17 @@ const jsonifyMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules): 
   };
 }
 
-const getMultipleAtariRulesAll = async (): Promise<MultipleAtariRules[]> => {
+export type MultipleAtariRulesWithId = {
+  rules_id: string,
+  rules: MultipleAtariRules
+}
+
+const getMultipleAtariRulesAll = async (): Promise<MultipleAtariRulesWithId[]> => {
   const bucket = await atariRuleBucket.get();
-  return Object.values(bucket).map(rule => makeMultipleAtariRules(rule));
+  return Object.entries(bucket).map(([rules_id, rule]) => ({
+    rules_id,
+    rules: makeMultipleAtariRules(rule)
+  }));
 }
 
 const setMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules) => {
@@ -90,5 +98,7 @@ const testInitStorage = () => {
 export {
   makeMultipleAtariRules,
   getMultipleAtariRulesAll,
+  addMultipleAtariRules,
+  setMultipleAtariRules,
   testInitStorage
 }
