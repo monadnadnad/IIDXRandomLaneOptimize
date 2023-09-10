@@ -100,12 +100,12 @@ export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
             })
           }
         >
-          ルールを追加
+          配置を追加
         </button>
         <button
           type="submit"
         >
-          ルールを保存
+          ルールを保存（これを押さないと配置を書いた努力が消える）
         </button>
       </form>
     </div>

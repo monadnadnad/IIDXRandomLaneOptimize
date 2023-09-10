@@ -3,8 +3,8 @@ import {
   AtariRule,
   RandomLaneTicket,
   searchAtariTicket,
-  defaultAtariRules
 } from "./search";
+import { getMultipleAtariRulesAll, getMultipleAtariRulesById } from "./storage";
 
 
 /**
@@ -92,7 +92,7 @@ const makeRandomURL = (fumen_url: string, lane: RandomLaneTicket): string => {
 
 
 // Listener
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.message) {
     case "link":
       console.log(message);
@@ -100,9 +100,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break
     case "highlight":
       console.log(message);
-      const rule = defaultAtariRules.find((r) => r.title === message.ruleTitle)!;
+      const rule = await getMultipleAtariRulesById(message.rules_id);
       highlightReset(getTicketsFromHTML());
-      highlightAtariTickets(getTicketsFromHTML(), rule);
+      highlightAtariTickets(getTicketsFromHTML(), rule.rules);
   }
 });
 

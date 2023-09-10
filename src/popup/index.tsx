@@ -1,28 +1,38 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { defaultAtariRules } from "../search";
+import { MultipleAtariRules } from "../search";
 import { SongTitleInput } from "./SongTitleInput";
+import { MultipleAtariRulesWithId, getMultipleAtariRulesAll } from "../storage";
 
 const Popup: React.FC = () => {
-  const [selectedRuleTitle, setSelectedRuleTitle] = useState<string | null>(null);
-    
+  //const [selectedRuleTitle, setSelectedRuleTitle] = useState<string | null>(null);
+  const [selectedRuleId, setSelectedRuleId] = useState<string>();
+  const [allRules, setAllRules] = useState<MultipleAtariRulesWithId[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const rules = await getMultipleAtariRulesAll();
+      setAllRules(rules);
+    }
+    fetch();
+  }, []);
+
   const handleRuleSelect = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedRuleTitle = event.target.value;
+    const selectedRuleId = event.target.value;
     // 選択されたタイトルに対応するルールを検索
-    const foundRuleTitle = defaultAtariRules.find((r) => r.title === selectedRuleTitle)?.title;
-    if (foundRuleTitle == undefined) {
-      setSelectedRuleTitle(null);
+    const foundRule = allRules.find(ruleWithid => ruleWithid.rules_id === selectedRuleId);
+    if (foundRule === undefined) {
       return;
     }
-    setSelectedRuleTitle(foundRuleTitle);
+    setSelectedRuleId(foundRule.rules_id);
   };
   
   const handleHighlightClick = () => {
-    const rule = defaultAtariRules.find((r) => r.title === selectedRuleTitle);
+    const rule = allRules.find(ruleWithId => ruleWithId.rules_id === selectedRuleId);
     if (rule == undefined) return;
     
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id!, { message: "highlight", ruleTitle: rule.title!});
+      chrome.tabs.sendMessage(tabs[0].id!, { message: "highlight", rules_id: rule.rules_id});
     })
   };
 
@@ -31,9 +41,9 @@ const Popup: React.FC = () => {
       <SongTitleInput />
       <select onChange={handleRuleSelect}>
         <option value="">検索ルールを選択</option>
-        {defaultAtariRules.map((rule) => (
-          <option key={rule.title} value={rule.title}>
-            {rule.title}
+        {allRules.map(rulesWithId => (
+          <option key={rulesWithId.rules_id} value={rulesWithId.rules_id}>
+            {rulesWithId.rules.title}
           </option>
         ))}
       </select>

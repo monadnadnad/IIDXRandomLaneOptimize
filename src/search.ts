@@ -108,46 +108,6 @@ const searchAtariTicket = (rule: AtariRule, tickets: RandomLaneTicket[]): Random
   return tickets.filter((t) => rule.matcher.match(t));
 }
 
-const defaultAtariRules = [
-  // rageとか3y3sとかの桂馬配置
-  new MultipleAtariRules([
-    new BasicAtariRule("14*****").option("r-random"),
-    new BasicAtariRule("17*****").option("r-random"),
-    new BasicAtariRule("47*****").option("r-random"),
-  ], "near-1472356-like"),
-  new MultipleAtariRules([
-    new BasicAtariRule("147****").option("r-random"),
-    new BasicAtariRule("174****").option("r-random"),
-    new BasicAtariRule("417****").option("r-random"),
-  ], "14723456-like"),
-  // 冥の軸割れ
-  new MultipleAtariRules([
-    new BasicAtariRule("2**3***"),
-    new BasicAtariRule("2***3**"),
-    new BasicAtariRule("2****3*"),
-    new BasicAtariRule("2*****3"),
-    new BasicAtariRule("*2*3***"),
-    new BasicAtariRule("*2**3**"),
-    new BasicAtariRule("*2***3*"),
-    new BasicAtariRule("*2****3"),
-    new BasicAtariRule("**23***"),
-    new BasicAtariRule("**2*3**"),
-    new BasicAtariRule("**2**3*"),
-    new BasicAtariRule("**2***3"),
-    new BasicAtariRule("3**2***"),
-    new BasicAtariRule("3***2**"),
-    new BasicAtariRule("3****2*"),
-    new BasicAtariRule("3*****2"),
-    new BasicAtariRule("*3*2***"),
-    new BasicAtariRule("*3**2**"),
-    new BasicAtariRule("*3***2*"),
-    new BasicAtariRule("*3****2"),
-    new BasicAtariRule("**32***"),
-    new BasicAtariRule("**3*2**"),
-    new BasicAtariRule("**3**2*"),
-    new BasicAtariRule("**3***2"),
-  ], "mei-jikuware")
-];
 
 export {
   AtariRule,
@@ -159,5 +119,4 @@ export {
   MultipleAtariRules,
   RandomLaneTicket,
   searchAtariTicket,
-  defaultAtariRules
 }

@@ -57,6 +57,16 @@ const getMultipleAtariRulesAll = async (): Promise<MultipleAtariRulesWithId[]> =
   }));
 }
 
+const getMultipleAtariRulesById = async (rules_id: string): Promise<MultipleAtariRulesWithId> => {
+  const bucket = await atariRuleBucket.get([rules_id]);
+  const obj = bucket[rules_id];
+  if (obj === undefined) throw Error(`No rule found id: ${rules_id}`);
+  return {
+    rules_id: obj.rules_id,
+    rules: makeMultipleAtariRules(obj)
+  }
+}
+
 const setMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules) => {
   atariRuleBucket.set({[rules_id]: jsonifyMultipleAtariRules(rules_id, rule)});
 }
@@ -66,39 +76,64 @@ const addMultipleAtariRules = (rule: MultipleAtariRules) => {
   setMultipleAtariRules(rules_id, rule);
 }
 
+const deleteMultipleAtariRules = (rules_id: string) => {
+  atariRuleBucket.remove([rules_id]);
+}
+
 const testInitStorage = () => {
   setMultipleAtariRules(
-    "TESTID001",
-    new MultipleAtariRules(
-      [
-        new BasicAtariRule("BBBWWWW").option("r-random"),
-        new BasicAtariRule("1234567").option("mirror")
-      ], "TEST001"
-    )
+    "DEFAULT-NEAR1472356",
+    new MultipleAtariRules([
+      new BasicAtariRule("14*****").option("r-random"),
+      new BasicAtariRule("17*****").option("r-random"),
+      new BasicAtariRule("47*****").option("r-random"),
+    ], "near-1472356R-RANDOM")
   )
   setMultipleAtariRules(
-    "TESTID002",
-    new MultipleAtariRules(
-      [
-        new BasicAtariRule("246****").option("mirror"),
-        new BasicAtariRule("BWWBWWB")
-      ], "TEST002"
-    )
+    "DEFAULT-1472356R",
+    new MultipleAtariRules([
+      new BasicAtariRule("147****").option("r-random"),
+      new BasicAtariRule("174****").option("r-random"),
+      new BasicAtariRule("417****").option("r-random"),
+    ], "14723456-R-RANDOM")
   )
   setMultipleAtariRules(
-    "TESTID003",
-    new MultipleAtariRules(
-      [
-        new BasicAtariRule("1357246")
-      ], "TEST003"
-    )
+    "DEFAULT-MEI",
+    new MultipleAtariRules([
+      new BasicAtariRule("2**3***"),
+      new BasicAtariRule("2***3**"),
+      new BasicAtariRule("2****3*"),
+      new BasicAtariRule("2*****3"),
+      new BasicAtariRule("*2*3***"),
+      new BasicAtariRule("*2**3**"),
+      new BasicAtariRule("*2***3*"),
+      new BasicAtariRule("*2****3"),
+      new BasicAtariRule("**23***"),
+      new BasicAtariRule("**2*3**"),
+      new BasicAtariRule("**2**3*"),
+      new BasicAtariRule("**2***3"),
+      new BasicAtariRule("3**2***"),
+      new BasicAtariRule("3***2**"),
+      new BasicAtariRule("3****2*"),
+      new BasicAtariRule("3*****2"),
+      new BasicAtariRule("*3*2***"),
+      new BasicAtariRule("*3**2**"),
+      new BasicAtariRule("*3***2*"),
+      new BasicAtariRule("*3****2"),
+      new BasicAtariRule("**32***"),
+      new BasicAtariRule("**3*2**"),
+      new BasicAtariRule("**3**2*"),
+      new BasicAtariRule("**3***2"),
+    ], "冥軸割れ")
   )
 }
 
 export {
   makeMultipleAtariRules,
   getMultipleAtariRulesAll,
+  getMultipleAtariRulesById,
   addMultipleAtariRules,
   setMultipleAtariRules,
-  testInitStorage
+  deleteMultipleAtariRules,
+  testInitStorage,
 }

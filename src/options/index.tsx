@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import {
   MultipleAtariRulesWithId,
   addMultipleAtariRules,
+  deleteMultipleAtariRules,
   getMultipleAtariRulesAll,
   setMultipleAtariRules,
   testInitStorage
@@ -37,19 +38,41 @@ const Options: React.FC = () => {
     setAllRules(newRules);
   }
 
+  const handleDeleteRules = async (rules_id: string) => {
+    deleteMultipleAtariRules(rules_id);
+    const newRules = await getMultipleAtariRulesAll();
+    setAllRules(newRules);
+  }
+
+  const handleInitStorage = async () => {
+    testInitStorage();
+    const newRules = await getMultipleAtariRulesAll();
+    setAllRules(newRules);
+  }
+
   return (
     <div>
       <ul>
         {allRules.map((data, index) =>
-          <MultipleAtariRulesForm
-            key={index}
-            multipleAtariRules={data.rules}
-            rules_id={data.rules_id}
-            onSubmit={onSubmit}
-          />
+          <li key={data.rules_id}>
+            <MultipleAtariRulesForm
+              key={index}
+              multipleAtariRules={data.rules}
+              rules_id={data.rules_id}
+              onSubmit={onSubmit}
+            />
+            <button
+              type="button"
+              onClick={() => handleDeleteRules(data.rules_id)}
+            >
+              ルールを削除
+            </button>
+          </li>
         )}
       </ul>
-      <button onClick={testInitStorage}>Init</button>
+      <button onClick={handleInitStorage}>
+        デフォルトルールを追加
+      </button>
       <button onClick={handleAddRules}>
         ルールを追加
       </button>
