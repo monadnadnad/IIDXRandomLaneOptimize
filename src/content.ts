@@ -108,8 +108,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
 // ページ読み込み後のDOM編集
 window.onload = () => {
-  const ticketListContainer = document.getElementById("ticket-list")!;
-  const ticketULs = ticketListContainer.querySelectorAll("ul.inner");
+  const ticketListContainer = document.getElementById("ticket-list");
+  const ticketULs = ticketListContainer?.querySelectorAll("ul.inner");
+  if (ticketULs === undefined) return;
 
   // ヘッダーで列を増やす
   const headerUL = ticketULs[0] as HTMLElement;
