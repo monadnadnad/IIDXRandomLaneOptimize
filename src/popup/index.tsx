@@ -52,7 +52,9 @@ const Popup: React.FC = () => {
   );
 };
 
-createRoot(document.getElementById('popup-root') as HTMLElement).render(
+const container = document.getElementById('popup-root');
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <Popup />
   </React.StrictMode>

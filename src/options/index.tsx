@@ -80,7 +80,10 @@ const Options: React.FC = () => {
   );
 };
 
-createRoot(document.getElementById('options-root') as HTMLElement).render(
+
+const container =  document.getElementById('options-root');
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <Options />
   </React.StrictMode>
