@@ -1,7 +1,7 @@
 import data from "./textage.json";
 
 interface TextageSongInfos {
-  [title: string]: { spa?: string, sph?: string }
+  [title: string]: { url: string }
 }
 
 const textageSongInfos: TextageSongInfos = data;

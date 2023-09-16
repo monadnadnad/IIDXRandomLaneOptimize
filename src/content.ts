@@ -4,7 +4,7 @@ import {
   RandomLaneTicket,
   searchAtariTicket,
 } from "./search";
-import { getAtariRuleSetAll, getAtariRuleSetById } from "./storage";
+import { getAtariRuleSetById } from "./storage";
 
 
 /**
@@ -66,7 +66,7 @@ const highlightReset = (tickets: TicketInfo[]) => {
 
 const addTextageLink = (tickets: TicketInfo[], songTitle: string) => {
   const fumen_url = makeFumenURL(songTitle);
-  if (!fumen_url) return;
+  if (!fumen_url) throw new Error(`譜面URLが作成できない: ${songTitle}`);
   tickets.forEach((ticket) => {
     const textageLink = ticket.node.querySelector("li.textage")!;
     const link = textageLink.querySelector("a")!;
@@ -77,10 +77,9 @@ const addTextageLink = (tickets: TicketInfo[], songTitle: string) => {
 
 
 const makeFumenURL = (songTitle: string): string | null => {
-  // とりあえずSPAのみ
   if (songTitle in textageSongInfos) {
-    const spa = textageSongInfos[songTitle].spa;
-    return spa ? spa : null;
+    const url = textageSongInfos[songTitle].url;
+    return url;
   }
   return null;
 }

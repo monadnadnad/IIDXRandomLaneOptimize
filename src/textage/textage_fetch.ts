@@ -8,10 +8,8 @@
 
 // 曲情報を格納する配列
 interface FetchSongInfo {
-    title: string
-    spl?: string,
-    spa?: string,
-    sph?: string,
+  title: string
+  url: string
 }
 const songs: FetchSongInfo[] = [];
 
@@ -27,19 +25,23 @@ for (let i = 1; i < trNodesSnapshot.snapshotLength; i++) {
   };
   const splLink = getLink(0);
   const spaLink = getLink(1);
-  const sphLink = getLink(2);
   
   const titleNode = tdNodes[5];
   try {
     const titleText = titleNode ? titleNode.textContent || "" : "";
     const title = titleText.replace(/[\n\t]/g, "").replace(/\s+/g, " ").trim();
-    songs.push({ spl: splLink, spa: spaLink, sph: sphLink, title: title });
+    if (spaLink) {
+      songs.push({ title: title+"(A)", url: spaLink });
+    }
+    if (splLink) {
+      songs.push({ title: title+"(L)", url: splLink });
+    }
   } catch(e) {
     console.log(e);
   }
 }
 
-const _textageSongInfos: { [title: string]: { spa?: string, sph?: string } } = {};
+const _textageSongInfos: { [title: string]: { url: string } } = {};
 songs.forEach(songInfo => {
   const { title, ...rest } = songInfo;
   _textageSongInfos[title] = rest;
