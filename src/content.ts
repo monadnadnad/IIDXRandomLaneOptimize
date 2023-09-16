@@ -4,7 +4,7 @@ import {
   RandomLaneTicket,
   searchAtariTicket,
 } from "./search";
-import { getMultipleAtariRulesAll, getMultipleAtariRulesById } from "./storage";
+import { getAtariRuleSetAll, getAtariRuleSetById } from "./storage";
 
 
 /**
@@ -100,9 +100,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break
     case "highlight":
       console.log(message);
-      const rule = await getMultipleAtariRulesById(message.rules_id);
+      const rule = await getAtariRuleSetById(message.rules_id);
       highlightReset(getTicketsFromHTML());
-      highlightAtariTickets(getTicketsFromHTML(), rule.rules);
+      highlightAtariTickets(getTicketsFromHTML(), rule.ruleset);
   }
 });
 

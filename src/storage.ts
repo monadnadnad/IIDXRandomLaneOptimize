@@ -1,5 +1,5 @@
 import { getBucket } from '@extend-chrome/storage';
-import { AllowOption, BasicAtariRule, MultipleAtariRules } from './search';
+import { AllowOption, BasicAtariRule, AtariRuleSet } from './search';
 import { v4 as uuidv4 } from "uuid";
 
 // bucketにあるJSONだけからAtariRuleを復元する方法が必要
@@ -8,14 +8,14 @@ interface BasicAtariRuleJSON {
   allowOption: AllowOption
 }
 
-interface MultipleAtariRulesJSON {
+interface AtariRuleSetJSON {
   rules_id: string
   title: string
   rules: BasicAtariRuleJSON[]
 }
 
 interface AtariRuleBucket {
-  [rules_id: string]: MultipleAtariRulesJSON
+  [rules_id: string]: AtariRuleSetJSON
 }
 
 const atariRuleBucket = getBucket<AtariRuleBucket>("atari_rule_bucket", "local")
@@ -24,9 +24,9 @@ const makeBasicAtariRule = (json: BasicAtariRuleJSON): BasicAtariRule => {
   return new BasicAtariRule(json.rule).option(json.allowOption);
 }
 
-const makeMultipleAtariRules = (json: MultipleAtariRulesJSON): MultipleAtariRules => {
+const makeAtariRuleSet = (json: AtariRuleSetJSON): AtariRuleSet => {
   const innerBasicAtariRules = json.rules.map((v) => makeBasicAtariRule(v));
-  return new MultipleAtariRules(innerBasicAtariRules, json.title);
+  return new AtariRuleSet(innerBasicAtariRules, json.title);
 }
 
 const jsonifyBasicAtariRule = (rule: BasicAtariRule): BasicAtariRuleJSON => {
@@ -36,7 +36,7 @@ const jsonifyBasicAtariRule = (rule: BasicAtariRule): BasicAtariRuleJSON => {
   };
 }
 
-const jsonifyMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules): MultipleAtariRulesJSON => {
+const jsonifyAtariRuleSet = (rules_id: string, rule: AtariRuleSet): AtariRuleSetJSON => {
   return {
     rules_id,
     title: rule.title!,
@@ -44,62 +44,62 @@ const jsonifyMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules): 
   };
 }
 
-export type MultipleAtariRulesWithId = {
+export type AtariRuleSetWithId = {
   rules_id: string,
-  rules: MultipleAtariRules
+  ruleset: AtariRuleSet
 }
 
-const getMultipleAtariRulesAll = async (): Promise<MultipleAtariRulesWithId[]> => {
+const getAtariRuleSetAll = async (): Promise<AtariRuleSetWithId[]> => {
   const bucket = await atariRuleBucket.get();
   return Object.entries(bucket).map(([rules_id, rule]) => ({
     rules_id,
-    rules: makeMultipleAtariRules(rule)
+    ruleset: makeAtariRuleSet(rule)
   }));
 }
 
-const getMultipleAtariRulesById = async (rules_id: string): Promise<MultipleAtariRulesWithId> => {
+const getAtariRuleSetById = async (rules_id: string): Promise<AtariRuleSetWithId> => {
   const bucket = await atariRuleBucket.get([rules_id]);
   const obj = bucket[rules_id];
   if (obj === undefined) throw Error(`No rule found id: ${rules_id}`);
   return {
     rules_id: obj.rules_id,
-    rules: makeMultipleAtariRules(obj)
+    ruleset: makeAtariRuleSet(obj)
   }
 }
 
-const setMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules) => {
-  atariRuleBucket.set({[rules_id]: jsonifyMultipleAtariRules(rules_id, rule)});
+const setAtariRuleSet = (rules_id: string, rule: AtariRuleSet) => {
+  atariRuleBucket.set({[rules_id]: jsonifyAtariRuleSet(rules_id, rule)});
 }
 
-const addMultipleAtariRules = (rule: MultipleAtariRules) => {
+const addAtariRuleSet = (rule: AtariRuleSet) => {
   const rules_id = uuidv4();
-  setMultipleAtariRules(rules_id, rule);
+  setAtariRuleSet(rules_id, rule);
 }
 
-const deleteMultipleAtariRules = (rules_id: string) => {
+const deleteAtariRuleSet = (rules_id: string) => {
   atariRuleBucket.remove([rules_id]);
 }
 
 const testInitStorage = () => {
-  setMultipleAtariRules(
+  setAtariRuleSet(
     "DEFAULT-NEAR1472356",
-    new MultipleAtariRules([
+    new AtariRuleSet([
       new BasicAtariRule("14*****").option("r-random"),
       new BasicAtariRule("17*****").option("r-random"),
       new BasicAtariRule("47*****").option("r-random"),
     ], "near-1472356R-RANDOM")
   )
-  setMultipleAtariRules(
+  setAtariRuleSet(
     "DEFAULT-1472356R",
-    new MultipleAtariRules([
+    new AtariRuleSet([
       new BasicAtariRule("147****").option("r-random"),
       new BasicAtariRule("174****").option("r-random"),
       new BasicAtariRule("417****").option("r-random"),
     ], "14723456-R-RANDOM")
   )
-  setMultipleAtariRules(
+  setAtariRuleSet(
     "DEFAULT-MEI",
-    new MultipleAtariRules([
+    new AtariRuleSet([
       new BasicAtariRule("2**3***"),
       new BasicAtariRule("2***3**"),
       new BasicAtariRule("2****3*"),
@@ -129,11 +129,11 @@ const testInitStorage = () => {
 }
 
 export {
-  makeMultipleAtariRules,
-  getMultipleAtariRulesAll,
-  getMultipleAtariRulesById,
-  addMultipleAtariRules,
-  setMultipleAtariRules,
-  deleteMultipleAtariRules,
+  makeAtariRuleSet,
+  getAtariRuleSetAll,
+  getAtariRuleSetById,
+  addAtariRuleSet,
+  setAtariRuleSet,
+  deleteAtariRuleSet,
   testInitStorage,
 }

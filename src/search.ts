@@ -60,7 +60,7 @@ class BasicAtariRule implements AtariRule {
   }
 }
 
-class MultipleAtariRules implements AtariRule {
+class AtariRuleSet implements AtariRule {
   title: string;
   rules: BasicAtariRule[];
   constructor(rules: BasicAtariRule[], title: string) {
@@ -82,7 +82,7 @@ export {
   AtariRule,
   AllowOption,
   BasicAtariRule,
-  MultipleAtariRules,
+  AtariRuleSet,
   RandomLaneTicket,
   searchAtariTicket,
 }

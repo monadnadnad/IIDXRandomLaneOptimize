@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { AllowOption, BasicAtariRule, MultipleAtariRules } from "../search";
+import { AllowOption, BasicAtariRule, AtariRuleSet } from "../search";
 
 export interface FormValues {
   title: string;
@@ -21,23 +21,23 @@ const allowOptionLabels: AllowOptionLabels = {
 };
 
 interface Props {
-  multipleAtariRules: MultipleAtariRules
+  atariRuleSet: AtariRuleSet
   rules_id: string
-  onSubmit: (rule: MultipleAtariRules, rules_id: string | undefined) => Promise<void>
+  onSubmit: (rule: AtariRuleSet, rules_id: string | undefined) => Promise<void>
 }
 
-export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
+export const AtariRuleSetForm: React.FC<Props> = (props) => {
   const {
-    multipleAtariRules,
+    atariRuleSet,
     rules_id,
     onSubmit
   } = props;
-  const clonedBasicAtariRules = multipleAtariRules.rules
+  const clonedBasicAtariRules = atariRuleSet.rules
     .map(rule => new BasicAtariRule(rule.text).option(rule.allowOption));
 
   const { register, handleSubmit, control } = useForm<FormValues>({
     defaultValues: {
-      title: multipleAtariRules.title,
+      title: atariRuleSet.title,
       rules_id: rules_id,
       rules: clonedBasicAtariRules.map(rule => ({
         ruleString: rule.text,
@@ -51,12 +51,12 @@ export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
   });
   
   const _onSubmit = (formData: FormValues) => {
-    const newMultipleAtariRules = new MultipleAtariRules(
+    const newAtariRuleSet = new AtariRuleSet(
       formData.rules.map(rule =>
         new BasicAtariRule(rule.ruleString).option(rule.allowOption)
       ), formData.title
     );
-    onSubmit(newMultipleAtariRules, formData.rules_id);
+    onSubmit(newAtariRuleSet, formData.rules_id);
   }
 
   return (

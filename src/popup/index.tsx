@@ -1,17 +1,16 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { MultipleAtariRules } from "../search";
 import { SongTitleInput } from "./SongTitleInput";
-import { MultipleAtariRulesWithId, getMultipleAtariRulesAll } from "../storage";
+import { AtariRuleSetWithId, getAtariRuleSetAll } from "../storage";
 
 const Popup: React.FC = () => {
   //const [selectedRuleTitle, setSelectedRuleTitle] = useState<string | null>(null);
   const [selectedRuleId, setSelectedRuleId] = useState<string>();
-  const [allRules, setAllRules] = useState<MultipleAtariRulesWithId[]>([]);
+  const [allRules, setAllRules] = useState<AtariRuleSetWithId[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
-      const rules = await getMultipleAtariRulesAll();
+      const rules = await getAtariRuleSetAll();
       setAllRules(rules);
     }
     fetch();
@@ -43,7 +42,7 @@ const Popup: React.FC = () => {
         <option value="">検索ルールを選択</option>
         {allRules.map(rulesWithId => (
           <option key={rulesWithId.rules_id} value={rulesWithId.rules_id}>
-            {rulesWithId.rules.title}
+            {rulesWithId.ruleset.title}
           </option>
         ))}
       </select>

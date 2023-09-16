@@ -1,52 +1,52 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  MultipleAtariRulesWithId,
-  addMultipleAtariRules,
-  deleteMultipleAtariRules,
-  getMultipleAtariRulesAll,
-  setMultipleAtariRules,
+  AtariRuleSetWithId,
+  addAtariRuleSet,
+  deleteAtariRuleSet,
+  getAtariRuleSetAll,
+  setAtariRuleSet,
   testInitStorage
 } from "../storage";
-import { MultipleAtariRules } from "../search";
-import { MultipleAtariRulesForm } from "./MultipleAtariRulesForm";
+import { AtariRuleSet } from "../search";
+import { AtariRuleSetForm } from "./AtariRuleSetForm";
 
 const Options: React.FC = () => {
-  const [allRules, setAllRules] = useState<MultipleAtariRulesWithId[]>([]);
+  const [allRules, setAllRules] = useState<AtariRuleSetWithId[]>([]);
   useEffect(() => {
     const fetch = async () => {
-      const rules = await getMultipleAtariRulesAll();
+      const rules = await getAtariRuleSetAll();
       setAllRules(rules);
     }
     fetch();
   }, []);
 
-  const onSubmit = async (rule: MultipleAtariRules, rules_id: string | undefined) => {
+  const onSubmit = async (rule: AtariRuleSet, rules_id: string | undefined) => {
     if (rules_id) {
-      setMultipleAtariRules(rules_id, rule);
+      setAtariRuleSet(rules_id, rule);
     } else {
-      addMultipleAtariRules(rule);
+      addAtariRuleSet(rule);
     }
-    const newRules = await getMultipleAtariRulesAll();
+    const newRules = await getAtariRuleSetAll();
     setAllRules(newRules);
   }
 
   const handleAddRules = async () => {
-    const rules = new MultipleAtariRules([], "");
-    addMultipleAtariRules(rules);
-    const newRules = await getMultipleAtariRulesAll();
+    const rules = new AtariRuleSet([], "");
+    addAtariRuleSet(rules);
+    const newRules = await getAtariRuleSetAll();
     setAllRules(newRules);
   }
 
   const handleDeleteRules = async (rules_id: string) => {
-    deleteMultipleAtariRules(rules_id);
-    const newRules = await getMultipleAtariRulesAll();
+    deleteAtariRuleSet(rules_id);
+    const newRules = await getAtariRuleSetAll();
     setAllRules(newRules);
   }
 
   const handleInitStorage = async () => {
     testInitStorage();
-    const newRules = await getMultipleAtariRulesAll();
+    const newRules = await getAtariRuleSetAll();
     setAllRules(newRules);
   }
 
@@ -55,9 +55,9 @@ const Options: React.FC = () => {
       <ul>
         {allRules.map((data, index) =>
           <li key={data.rules_id}>
-            <MultipleAtariRulesForm
+            <AtariRuleSetForm
               key={index}
-              multipleAtariRules={data.rules}
+              atariRuleSet={data.ruleset}
               rules_id={data.rules_id}
               onSubmit={onSubmit}
             />

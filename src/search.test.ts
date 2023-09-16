@@ -1,6 +1,6 @@
 import {
   BasicAtariRule,
-  MultipleAtariRules,
+  AtariRuleSet,
   searchAtariTicket,
 } from "./search";
 
@@ -11,8 +11,8 @@ test("searchAtariTicket", () => {
 })
 
 
-test("MultipleAtariRules", () => {
-  const rules = new MultipleAtariRules([
+test("AtariRuleSet", () => {
+  const rules = new AtariRuleSet([
     new BasicAtariRule("14*****"),
     new BasicAtariRule("41*****")
   ], "test");
