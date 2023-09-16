@@ -1,8 +1,79 @@
 type RandomLaneTicket = string;
 type AllowOption = "strict" | "mirror" | "r-random";
+type IncludeKenban = string[][];
 
 interface AtariRule {
   match(lane: RandomLaneTicket): boolean;
+}
+
+const OR_KENBAN_PATTERN = /\[[!]?([1-7]{1,7})\]/;
+const ONE_KENBAN_PATTERN = /[BW1-7\*]|\[[!]?[1-7]{1,7}\]/g;
+const RULE_PATTERN = new RegExp(`^(${ONE_KENBAN_PATTERN.source}){7}$`);
+
+const parseOrKenban = (orKenban: string): string[] => {
+  const match = orKenban.match(OR_KENBAN_PATTERN);
+  
+  if (!match) {
+    throw new Error(`複数鍵盤の形式が間違っている: ${orKenban}`)
+  }
+  
+  const exclude = match[0].includes("!");
+  const digits = match[1].replace("!", "");
+  const result = "1234567".split("");
+  
+  if (exclude) {
+    return result.filter(d => !digits.includes(d));
+  }
+  return result.filter(d => digits.includes(d));
+}
+
+const parseOneKenban = (oneKenban: string): string[] => {
+  if (oneKenban.length > 1) return parseOrKenban(oneKenban);
+  if (oneKenban == "B") return "246".split("");
+  if (oneKenban == "W") return "1357".split("");
+  if (oneKenban == "*") return "1234567".split("");
+  if ("1234567".includes(oneKenban)) return [oneKenban];
+  return [];
+}
+
+const validateRuleText = (rule: string): boolean => {
+  return rule.match(RULE_PATTERN) !== null;
+};
+
+const parseRuleText = (rule_text: string) => {
+  // RULE = ONE_KENBANが7個
+  // ONE_KENBAN = B | W | [1-7] | \* | \[OR_KENBAN\]
+  // OR_KENBAN = [1-7]+ (include rule) | ![1-7]+ (exclude rule)
+  // ex) [1-3][1-3][1-3]**** => 1234567, 1324567, 3214567など
+  // ex) [!123]****** => 4123567, 5123467など
+
+  if (!validateRuleText(rule_text)) {
+    throw new Error(`ルールが不正: ${rule_text}`);
+  }
+
+  const oneKenbans = rule_text.match(ONE_KENBAN_PATTERN);
+
+  if (!oneKenbans) {
+    throw new Error(`各鍵盤の情報を読み取れない: ${rule_text}`);
+  }
+  
+  if (oneKenbans.length !== 7) {
+    throw new Error(`鍵盤が7つじゃない: ${oneKenbans}`);
+  }
+  
+  const includeKenban: IncludeKenban = [];
+  oneKenbans.forEach((kenban) => {
+    includeKenban.push(parseOneKenban(kenban));
+  });
+
+  return includeKenban;
+};
+
+const matchIncludeKenbanWithLane = (includeKenban: IncludeKenban, lane: RandomLaneTicket): boolean => {
+  for (let i=0; i<7; i++) {
+    if (!includeKenban[i].includes(lane[i])) return false;
+  }
+  return true;
 }
 
 const mirrorRule = (rule: string): string => {
@@ -30,15 +101,8 @@ const matchTicket = (lane: RandomLaneTicket, rule_text: string, allowOption: All
   
   console.log("match using", rules);
   return rules.some((rule) => {
-    for (let i=0; i<7; i++) {
-      let c = rule[i];
-      if (c == "*") continue;
-      const black = "246".includes(lane[i]);
-      if (c == "B" && black) continue;
-      if (c == "W" && !black) continue;
-      if (c != lane[i]) return false;
-    }
-    return true;
+    const includeKenban = parseRuleText(rule);
+    return matchIncludeKenbanWithLane(includeKenban, lane);
   });
 }
 
@@ -85,4 +149,5 @@ export {
   AtariRuleSet,
   RandomLaneTicket,
   searchAtariTicket,
+  validateRuleText,
 }
