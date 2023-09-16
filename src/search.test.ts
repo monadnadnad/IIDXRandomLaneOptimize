@@ -1,6 +1,5 @@
 import {
   BasicAtariRule,
-  BasicMatcher,
   MultipleAtariRules,
   searchAtariTicket,
 } from "./search";
@@ -20,36 +19,37 @@ test("MultipleAtariRules", () => {
   expect(searchAtariTicket(rules, ["1472356", "4172356", "7142356"])).toStrictEqual(["1472356", "4172356"]);
 })
 
-test("BasicMatcherWithOption", () => {
-  const mirrorMatcher = new BasicMatcher("1234567").option("mirror");
-  expect(mirrorMatcher.match("1234567")).toBe(true);
-  expect(mirrorMatcher.match("2345671")).toBe(false);
-  expect(mirrorMatcher.match("3456712")).toBe(false);
-  expect(mirrorMatcher.match("4567123")).toBe(false);
-  expect(mirrorMatcher.match("5671234")).toBe(false);
-  expect(mirrorMatcher.match("6712345")).toBe(false);
-  expect(mirrorMatcher.match("7123456")).toBe(false);
-  expect(mirrorMatcher.match("7654321")).toBe(true);
-  expect(mirrorMatcher.match("6543217")).toBe(false);
-  expect(mirrorMatcher.match("5432176")).toBe(false);
-  expect(mirrorMatcher.match("4321765")).toBe(false);
-  expect(mirrorMatcher.match("3217654")).toBe(false);
-  expect(mirrorMatcher.match("2176543")).toBe(false);
-  expect(mirrorMatcher.match("1765432")).toBe(false);
+test("BasicAtariRulerWithOption", () => {
+  const mirrorRule = new BasicAtariRule("1234567").option("mirror");
+  expect(mirrorRule.match("1234567")).toBe(true);
+  expect(mirrorRule.match("2345671")).toBe(false);
+  expect(mirrorRule.match("3456712")).toBe(false);
+  expect(mirrorRule.match("4567123")).toBe(false);
+  expect(mirrorRule.match("5671234")).toBe(false);
+  expect(mirrorRule.match("6712345")).toBe(false);
+  expect(mirrorRule.match("7123456")).toBe(false);
+  expect(mirrorRule.match("7654321")).toBe(true);
+  expect(mirrorRule.match("6543217")).toBe(false);
+  expect(mirrorRule.match("5432176")).toBe(false);
+  expect(mirrorRule.match("4321765")).toBe(false);
+  expect(mirrorRule.match("3217654")).toBe(false);
+  expect(mirrorRule.match("2176543")).toBe(false);
+  expect(mirrorRule.match("1765432")).toBe(false);
   
-  const rMatcher = new BasicMatcher("1234567").option("r-random");
-  expect(rMatcher.match("1234567")).toBe(true);
-  expect(rMatcher.match("2345671")).toBe(true);
-  expect(rMatcher.match("3456712")).toBe(true);
-  expect(rMatcher.match("4567123")).toBe(true);
-  expect(rMatcher.match("5671234")).toBe(true);
-  expect(rMatcher.match("6712345")).toBe(true);
-  expect(rMatcher.match("7123456")).toBe(true);
-  expect(rMatcher.match("7654321")).toBe(true); // mirrorも許容する
-  expect(rMatcher.match("6543217")).toBe(true);
-  expect(rMatcher.match("5432176")).toBe(true);
-  expect(rMatcher.match("4321765")).toBe(true);
-  expect(rMatcher.match("3217654")).toBe(true);
-  expect(rMatcher.match("2176543")).toBe(true);
-  expect(rMatcher.match("1765432")).toBe(true);
+  const rRule = new BasicAtariRule("1234567").option("r-random");
+  expect(rRule.match("1234567")).toBe(true);
+  expect(rRule.match("2345671")).toBe(true);
+  expect(rRule.match("3456712")).toBe(true);
+  expect(rRule.match("4567123")).toBe(true);
+  expect(rRule.match("5671234")).toBe(true);
+  expect(rRule.match("6712345")).toBe(true);
+  expect(rRule.match("7123456")).toBe(true);
+  expect(rRule.match("7654321")).toBe(true); // mirrorも許容する
+  expect(rRule.match("6543217")).toBe(true);
+  expect(rRule.match("5432176")).toBe(true);
+  expect(rRule.match("4321765")).toBe(true);
+  expect(rRule.match("3217654")).toBe(true);
+  expect(rRule.match("2176543")).toBe(true);
+  expect(rRule.match("1765432")).toBe(true);
+  expect(rRule.match("1234576")).toBe(false);
 })

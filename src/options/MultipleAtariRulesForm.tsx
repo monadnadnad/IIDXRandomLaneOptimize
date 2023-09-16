@@ -32,16 +32,15 @@ export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
     rules_id,
     onSubmit
   } = props;
-  const clonedBasicAtariRules = multipleAtariRules.matcher
-    .rules
-    .map(rule => new BasicAtariRule(rule.matcher.rule).option(rule.allowOption));
+  const clonedBasicAtariRules = multipleAtariRules.rules
+    .map(rule => new BasicAtariRule(rule.text).option(rule.allowOption));
 
   const { register, handleSubmit, control } = useForm<FormValues>({
     defaultValues: {
       title: multipleAtariRules.title,
       rules_id: rules_id,
       rules: clonedBasicAtariRules.map(rule => ({
-        ruleString: rule.matcher.rule,
+        ruleString: rule.text,
         allowOption: rule.allowOption
       }))
     },

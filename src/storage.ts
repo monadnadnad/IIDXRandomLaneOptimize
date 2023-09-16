@@ -31,7 +31,7 @@ const makeMultipleAtariRules = (json: MultipleAtariRulesJSON): MultipleAtariRule
 
 const jsonifyBasicAtariRule = (rule: BasicAtariRule): BasicAtariRuleJSON => {
   return {
-    rule: rule.matcher.rule,
+    rule: rule.text,
     allowOption: rule.allowOption
   };
 }
@@ -40,7 +40,7 @@ const jsonifyMultipleAtariRules = (rules_id: string, rule: MultipleAtariRules): 
   return {
     rules_id,
     title: rule.title!,
-    rules: rule.matcher.rules.map(rule => jsonifyBasicAtariRule(rule))
+    rules: rule.rules.map(rule => jsonifyBasicAtariRule(rule))
   };
 }
 
