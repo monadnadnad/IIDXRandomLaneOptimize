@@ -16,7 +16,7 @@ test("MultipleAtariRules", () => {
   const rules = new MultipleAtariRules([
     new BasicAtariRule("14*****"),
     new BasicAtariRule("41*****")
-  ]);
+  ], "test");
   expect(searchAtariTicket(rules, ["1472356", "4172356", "7142356"])).toStrictEqual(["1472356", "4172356"]);
 })
 

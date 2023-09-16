@@ -34,7 +34,7 @@ export const MultipleAtariRulesForm: React.FC<Props> = (props) => {
   } = props;
   const clonedBasicAtariRules = multipleAtariRules.matcher
     .rules
-    .map(rule => new BasicAtariRule(rule.matcher.rule, rule.title).option(rule.allowOption));
+    .map(rule => new BasicAtariRule(rule.matcher.rule).option(rule.allowOption));
 
   const { register, handleSubmit, control } = useForm<FormValues>({
     defaultValues: {

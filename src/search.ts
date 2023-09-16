@@ -67,11 +67,11 @@ class BasicMatcher implements Matcher {
 
 
 class BasicAtariRule implements AtariRule {
-  title?: string;
+  rule: string;
   matcher: BasicMatcher;
   allowOption: AllowOption;
-  constructor(rule: string, title?: string) {
-    this.title = title;
+  constructor(rule: string) {
+    this.rule = rule;
     this.matcher = new BasicMatcher(rule);
     this.allowOption = "strict";
   }
@@ -96,9 +96,9 @@ class MultipleMatcher implements Matcher {
 }
 
 class MultipleAtariRules implements AtariRule {
-  title?: string;
+  title: string;
   matcher: MultipleMatcher;
-  constructor(rules: BasicAtariRule[], title?: string) {
+  constructor(rules: BasicAtariRule[], title: string) {
     this.title = title;
     this.matcher = new MultipleMatcher(rules);
   }
