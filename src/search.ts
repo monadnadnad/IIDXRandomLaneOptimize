@@ -99,7 +99,7 @@ const matchTicket = (lane: RandomLaneTicket, rule_text: string, allowOption: All
     rules.push(mirrorRule(rule_text));
   }
   
-  console.log("match using", rules);
+  // console.log("match using", rules);
   return rules.some((rule) => {
     const includeKenban = parseRuleText(rule);
     return matchIncludeKenbanWithLane(includeKenban, lane);
@@ -141,6 +141,58 @@ const searchAtariTicket = (rule: AtariRule, tickets: RandomLaneTicket[]): Random
   return tickets.filter((t) => rule.match(t));
 }
 
+const generatePermutations = (arr: string[]): string[][] => {
+  if (arr.length === 0) return [[]];
+  const first = arr[0];
+  const rest = arr.slice(1);
+  const permutations = generatePermutations(rest);
+  const result: string[][] = [];
+
+  for (const perm of permutations) {
+    for (let i = 0; i <= perm.length; i++) {
+      const copy = perm.slice();
+      copy.splice(i, 0, first);
+      result.push(copy);
+    }
+  }
+
+  return result;
+};
+
+export const makeHandSplitRuleSet = (
+  left: string,
+  right: string,
+  keep_order_left: boolean,
+  keep_order_right: boolean
+) => {
+  const LEFT_PATTERN = /[1-7\*]{3}/;
+  const RIGHT_PATTERN = /[1-7\*]{4}/;
+  if (!left.match(LEFT_PATTERN)) throw new Error(`皿側のルールが不正 ${left}`);
+  if (!right.match(RIGHT_PATTERN)) throw new Error(`非皿側のルールが不正 ${right}`);
+  
+  const left_rules = [left];
+  const right_rules = [right];
+  if (!keep_order_left) {
+    const left_chars = left.split("");
+    const left_permutations = generatePermutations(left_chars);
+    left_rules.push(...left_permutations.map(arr => arr.join("")));
+  }
+  if (!keep_order_right) {
+    const right_chars = right.split("");
+    const right_permutations = generatePermutations(right_chars);
+    right_rules.push(...right_permutations.map(arr => arr.join("")));
+  }
+  
+  const rules = [];
+  for (const left_rule of left_rules) {
+    for (const right_rule of right_rules) {
+      rules.push(new BasicAtariRule(left_rule + right_rule));
+    }
+  }
+  
+  const ruleset = new AtariRuleSet(rules, "");
+  return ruleset;
+}
 
 export {
   AtariRule,

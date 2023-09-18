@@ -2,6 +2,7 @@ import { textageSongInfos } from "./textage/textage";
 import {
   AtariRule,
   RandomLaneTicket,
+  makeHandSplitRuleSet,
   searchAtariTicket,
 } from "./search";
 import { getAtariRuleSetById } from "./storage";
@@ -92,16 +93,28 @@ const makeRandomURL = (fumen_url: string, lane: RandomLaneTicket): string => {
 
 // Listener
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  console.log(message);
   switch (message.message) {
-    case "link":
-      console.log(message);
+    case "link": {
       addTextageLink(getTicketsFromHTML(), message.songTitle);
-      break
-    case "highlight":
-      console.log(message);
+      break;
+    }
+    case "highlight": {
       const rule = await getAtariRuleSetById(message.rules_id);
       highlightReset(getTicketsFromHTML());
       highlightAtariTickets(getTicketsFromHTML(), rule.ruleset);
+      break;
+    }
+    case "highlightByHandSplit": {
+      const rule = makeHandSplitRuleSet(
+        message.leftHand,
+        message.rightHand,
+        message.keepOrderLeft,
+        message.keepOrderRight);
+      highlightReset(getTicketsFromHTML());
+      highlightAtariTickets(getTicketsFromHTML(), rule);
+      break;
+    }
   }
 });
 
@@ -111,6 +124,15 @@ window.onload = () => {
   const ticketULs = ticketListContainer?.querySelectorAll("ul.inner");
   if (ticketULs === undefined) return;
 
+  // popupの表示を埋め込む
+  /*
+  const popup = document.createElement("div");
+  popup.id = "popup-root";
+  ticketListContainer!.parentNode!.insertBefore(popup, ticketListContainer);
+  console.log(ticketListContainer!.parentNode);
+  const root = createRoot(popup as HTMLElement);
+  root.render(React.createElement(Popup, {}, null));
+  */
   // ヘッダーで列を増やす
   const headerUL = ticketULs[0] as HTMLElement;
   const newHeaderLi = document.createElement("li");

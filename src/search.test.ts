@@ -3,6 +3,7 @@ import {
   AtariRuleSet,
   searchAtariTicket,
   validateRuleText,
+  makeHandSplitRuleSet,
 } from "./search";
 
 test("searchAtariTicket", () => {
@@ -85,4 +86,15 @@ test("validateRuleText", () => {
   expect(validateRuleText("1234")).toBe(false);
   expect(validateRuleText("[123]*****")).toBe(false);
   expect(validateRuleText("[123]*******")).toBe(false);
+})
+
+test("HandSplit", () => {
+  const rule = makeHandSplitRuleSet("123", "4567", true, true);
+  expect(rule.match("1234567")).toBe(true);
+  expect(rule.match("4567123")).toBe(false);
+  const xperanza = makeHandSplitRuleSet("17*", "35**", false, false);
+  expect(xperanza.match("1743567")).toBe(true);
+  expect(xperanza.match("1675432")).toBe(true);
+  expect(xperanza.match("1234567")).toBe(false);
+  expect(xperanza.match("1372456")).toBe(false);
 })
