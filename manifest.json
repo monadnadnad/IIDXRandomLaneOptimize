@@ -7,13 +7,9 @@
       "storage",
       "tabs"
     ],
-    "action": {
-      "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html"],
-      "default_popup": "dist/popup.html"
-    },
     "content_scripts": [
       {
-        "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html"],
+        "matches": ["https://p.eagate.573.jp/game/2dx/*/djdata/random_lane/index.html*"],
         "js": ["dist/content.js"],
         "run_at": "document_end"
       }
