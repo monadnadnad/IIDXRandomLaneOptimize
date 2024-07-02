@@ -1,22 +1,15 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
 import { textageSongInfos } from "./textage/textage";
-import {
-  AtariRule,
-  RandomLaneTicket,
-  makeHandSplitRuleSet,
-  searchAtariTicket,
-} from "./search";
-import { getAtariRuleSetById } from "./storage";
-
+import { RandomLaneTicket } from "./search";
+import { Ticket } from "./ticket";
+import Tool from "./Components/Tool";
 
 /**
- * 公式サイトの各チケットを扱うための情報
- */
-interface TicketInfo {
-  laneText: RandomLaneTicket;
-  node: HTMLElement;
-}
-
-/**
+ * チケットリストの要素からチケット情報を抽出する
+ * @param element チケットリストのDOM要素
+ * @returns 抽出されたチケット情報の配列
+ *
  * DOMの構造:
  * <div id="ticket-list">
  *   <ul class="head inner">（li3つ）</ul><!-- ヘッダー -->
@@ -27,55 +20,22 @@ interface TicketInfo {
  *   </ul>
  *   <!-- 他のul要素も同様 -->
  * </div>
-*/
-const getTicketsFromHTML = (): TicketInfo[] => {
-  const ticketListContainer = document.getElementById("ticket-list")!;
-  const ticketULs = ticketListContainer.querySelectorAll("ul.inner");
+ */
+export const extractTicketsFromDOM = (element: HTMLElement): Ticket[] => {
+  const ticketULs = Array.from(element.querySelectorAll("ul.inner"));
 
-  const ticketInfos: TicketInfo[] = [];
-
-  // 最初のli（配置情報）だけを取得して配列に追加、最初のulはヘッダーなのでとばす
-  for (let i = 1; i < ticketULs.length; i++) {
-    const ticketUL = ticketULs[i] as HTMLElement;
+  return ticketULs.slice(1).map((ticketUL) => {
     const laneTextNode = ticketUL.querySelector("li")!;
     const laneText = laneTextNode.textContent!.trim();
-    ticketInfos.push({
-      laneText: laneText,
-      node: ticketUL
-    });
-  }
-  
-  return ticketInfos;
-}
+    const expirationNode = ticketUL.querySelector("li:nth-child(2)")!;
+    const expiration = expirationNode.textContent!.trim();
 
-const highlightAtariTickets = (tickets: TicketInfo[], rule: AtariRule) => {
-  const atariLaneTexts = searchAtariTicket(rule, tickets.map(ticket => ticket.laneText));
-
-  atariLaneTexts.forEach(atariLaneText => {
-    const atariTicketInfo = tickets.find(ticketInfo => ticketInfo.laneText === atariLaneText);
-    if (atariTicketInfo) {
-      atariTicketInfo.node.style.backgroundColor = "yellow";
-    }
+    return {
+      laneText,
+      expiration,
+    };
   });
-}
-
-const highlightReset = (tickets: TicketInfo[]) => {
-  tickets.forEach((ticket) => {
-    ticket.node.style.backgroundColor = "#fff";
-  });
-}
-
-const addTextageLink = (tickets: TicketInfo[], songTitle: string) => {
-  const fumen_url = makeFumenURL(songTitle);
-  if (!fumen_url) throw new Error(`譜面URLが作成できない: ${songTitle}`);
-  tickets.forEach((ticket) => {
-    const textageLink = ticket.node.querySelector("li.textage")!;
-    const link = textageLink.querySelector("a")!;
-    link.href = makeRandomURL(fumen_url, ticket.laneText);
-    link.textContent = `${songTitle}`;
-  });
-}
-
+};
 
 const makeFumenURL = (songTitle: string): string | null => {
   if (songTitle in textageSongInfos) {
@@ -83,67 +43,24 @@ const makeFumenURL = (songTitle: string): string | null => {
     return url;
   }
   return null;
-}
+};
 
 const makeRandomURL = (fumen_url: string, lane: RandomLaneTicket): string => {
   return fumen_url + "R0" + lane + "01234567";
-}
+};
 
-
-
-// Listener
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  console.log(message);
-  switch (message.message) {
-    case "link": {
-      addTextageLink(getTicketsFromHTML(), message.songTitle);
-      break;
-    }
-    case "highlight": {
-      const rule = await getAtariRuleSetById(message.rules_id);
-      highlightReset(getTicketsFromHTML());
-      highlightAtariTickets(getTicketsFromHTML(), rule.ruleset);
-      break;
-    }
-    case "highlightByHandSplit": {
-      const rule = makeHandSplitRuleSet(
-        message.leftHand,
-        message.rightHand,
-        message.keepOrderLeft,
-        message.keepOrderRight);
-      highlightReset(getTicketsFromHTML());
-      highlightAtariTickets(getTicketsFromHTML(), rule);
-      break;
-    }
-  }
-});
-
-// ページ読み込み後のDOM編集
 window.onload = () => {
   const ticketListContainer = document.getElementById("ticket-list");
-  const ticketULs = ticketListContainer?.querySelectorAll("ul.inner");
-  if (ticketULs === undefined) return;
-
-  // popupの表示を埋め込む
-  /*
-  const popup = document.createElement("div");
-  popup.id = "popup-root";
-  ticketListContainer!.parentNode!.insertBefore(popup, ticketListContainer);
-  console.log(ticketListContainer!.parentNode);
-  const root = createRoot(popup as HTMLElement);
-  root.render(React.createElement(Popup, {}, null));
-  */
-  // ヘッダーで列を増やす
-  const headerUL = ticketULs[0] as HTMLElement;
-  const newHeaderLi = document.createElement("li");
-  newHeaderLi.textContent = "Textage";
-  headerUL.appendChild(newHeaderLi);
-  // 各行にliを追加
-  for (let i = 1; i < ticketULs.length; i++) {
-    const ticketUL = ticketULs[i] as HTMLElement;
-    const newTextageLi = document.createElement("li");
-    newTextageLi.classList.add("textage");
-    newTextageLi.appendChild(document.createElement("a"));
-    ticketUL.appendChild(newTextageLi);
+  if (!ticketListContainer) {
+    console.log("チケット一覧が見つからない");
+    return;
   }
+
+  const tickets = extractTicketsFromDOM(ticketListContainer);
+
+  const toolContainer = document.createElement("div");
+  toolContainer.id = "tool-root";
+  ticketListContainer.insertAdjacentElement("beforebegin", toolContainer);
+  const root = createRoot(toolContainer);
+  root.render(React.createElement(Tool, { tickets }));
 };

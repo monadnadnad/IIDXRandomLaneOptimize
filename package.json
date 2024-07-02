@@ -3,8 +3,8 @@
     "build": "webpack",
     "dev": "webpack --watch",
     "lint": "eslint src",
-    "format": "npx prettier src --write",
-    "test": "npx jest src"
+    "format": "prettier src --write",
+    "test": "jest src"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.0",
@@ -34,7 +34,10 @@
   "dependencies": {
     "@babel/core": "^7.22.11",
     "@babel/preset-react": "^7.22.5",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@extend-chrome/storage": "^1.5.0",
+    "@mui/material": "^5.15.21",
     "@types/chrome": "^0.0.244",
     "@types/react": "^18.2.21",
     "@types/react-autosuggest": "^10.1.6",
