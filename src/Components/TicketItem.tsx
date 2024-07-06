@@ -11,7 +11,7 @@ const TicketItem: React.FC<TicketItemProps> = ({ ticket }) => {
 
   return (
     <ListItem sx={{ textAlign: "center" }}>
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item xs={6}>
           <ListItemText primary={laneText} />
         </Grid>
