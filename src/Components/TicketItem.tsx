@@ -13,7 +13,10 @@ const TicketItem: React.FC<TicketItemProps> = ({ ticket }) => {
     <ListItem sx={{ textAlign: "center" }}>
       <Grid container>
         <Grid item xs={6}>
-          <ListItemText primary={laneText} />
+          <ListItemText
+            primary={laneText}
+            sx={{ cursor: "pointer", textDecoration: "underline" }}
+          />
         </Grid>
         <Grid item xs={6}>
           <ListItemText primary={expiration} />

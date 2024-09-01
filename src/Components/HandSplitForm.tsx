@@ -47,11 +47,7 @@ export const HandSplitForm = () => {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit(_onSubmit)}
-      sx={{ backgroundColor: "#f5f5f5", padding: 2, borderRadius: 2 }}
-    >
+    <Box component="form" onSubmit={handleSubmit(_onSubmit)}>
       <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -81,7 +77,7 @@ export const HandSplitForm = () => {
         </Grid>
       </Grid>
       <Button variant="contained" color="primary" type="submit">
-        分業ルールで検索
+        チケットを検索
       </Button>
     </Box>
   );
