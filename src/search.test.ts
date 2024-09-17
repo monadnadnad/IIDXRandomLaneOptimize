@@ -10,16 +10,18 @@ test("searchAtariTicket", () => {
   const rules = [new BasicAtariRule("147****"), new BasicAtariRule("BBBWWWW")];
   expect(searchAtariTicket(rules[0], ["1472356", "1234567", "2461357"])).toStrictEqual(["1472356"]);
   expect(searchAtariTicket(rules[1], ["1472356", "1234567", "2461357"])).toStrictEqual(["2461357"]);
-})
-
+});
 
 test("AtariRuleSet", () => {
-  const rules = new AtariRuleSet([
-    new BasicAtariRule("14*****"),
-    new BasicAtariRule("41*****")
-  ], "test");
-  expect(searchAtariTicket(rules, ["1472356", "4172356", "7142356"])).toStrictEqual(["1472356", "4172356"]);
-})
+  const rules = new AtariRuleSet(
+    [new BasicAtariRule("14*****"), new BasicAtariRule("41*****")],
+    "test"
+  );
+  expect(searchAtariTicket(rules, ["1472356", "4172356", "7142356"])).toStrictEqual([
+    "1472356",
+    "4172356",
+  ]);
+});
 
 test("BasicAtariRulerWithOption", () => {
   const mirrorRule = new BasicAtariRule("1234567").option("mirror");
@@ -37,7 +39,7 @@ test("BasicAtariRulerWithOption", () => {
   expect(mirrorRule.match("3217654")).toBe(false);
   expect(mirrorRule.match("2176543")).toBe(false);
   expect(mirrorRule.match("1765432")).toBe(false);
-  
+
   const rRule = new BasicAtariRule("1234567").option("r-random");
   expect(rRule.match("1234567")).toBe(true);
   expect(rRule.match("2345671")).toBe(true);
@@ -54,7 +56,7 @@ test("BasicAtariRulerWithOption", () => {
   expect(rRule.match("2176543")).toBe(true);
   expect(rRule.match("1765432")).toBe(true);
   expect(rRule.match("1234576")).toBe(false);
-})
+});
 
 test("OrRules", () => {
   const saragawa123 = new BasicAtariRule("[123][123][123]****");
@@ -67,7 +69,7 @@ test("OrRules", () => {
   expect(exclude123.match("1243567")).toBe(false);
   expect(exclude123.match("1456237")).toBe(false);
   expect(exclude123.match("5671234")).toBe(true);
-})
+});
 
 test("validateRuleText", () => {
   expect(validateRuleText("BBBWWWW")).toBe(true);
@@ -86,7 +88,7 @@ test("validateRuleText", () => {
   expect(validateRuleText("1234")).toBe(false);
   expect(validateRuleText("[123]*****")).toBe(false);
   expect(validateRuleText("[123]*******")).toBe(false);
-})
+});
 
 test("HandSplit", () => {
   const rule = makeHandSplitRuleSet("123", "4567", true, true);
@@ -97,4 +99,4 @@ test("HandSplit", () => {
   expect(xperanza.match("1675432")).toBe(true);
   expect(xperanza.match("1234567")).toBe(false);
   expect(xperanza.match("1372456")).toBe(false);
-})
+});

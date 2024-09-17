@@ -4,10 +4,14 @@ import { ListItem, ListItemText, Grid } from "@mui/material";
 
 interface TicketItemProps {
   ticket: Ticket;
+  onClick: (laneText: string) => void;
 }
 
-const TicketItem: React.FC<TicketItemProps> = ({ ticket }) => {
+const TicketItem: React.FC<TicketItemProps> = ({ ticket, onClick }) => {
+  console.log("render ticketitem");
   const { laneText, expiration } = ticket;
+
+  const handleClick = () => onClick(laneText);
 
   return (
     <ListItem sx={{ textAlign: "center" }}>
@@ -16,6 +20,7 @@ const TicketItem: React.FC<TicketItemProps> = ({ ticket }) => {
           <ListItemText
             primary={laneText}
             sx={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={handleClick}
           />
         </Grid>
         <Grid item xs={6}>

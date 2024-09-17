@@ -1,7 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { textageSongInfos } from "./textage/textage";
-import { RandomLaneTicket } from "./search";
 import { Ticket } from "./ticket";
 import Tool from "./Components/Tool";
 
@@ -35,18 +33,6 @@ export const extractTicketsFromDOM = (element: HTMLElement): Ticket[] => {
       expiration,
     };
   });
-};
-
-const makeFumenURL = (songTitle: string): string | null => {
-  if (songTitle in textageSongInfos) {
-    const url = textageSongInfos[songTitle].url;
-    return url;
-  }
-  return null;
-};
-
-const makeRandomURL = (fumen_url: string, lane: RandomLaneTicket): string => {
-  return fumen_url + "R0" + lane + "01234567";
 };
 
 window.onload = () => {

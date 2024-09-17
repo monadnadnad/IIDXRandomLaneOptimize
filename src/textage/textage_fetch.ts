@@ -8,12 +8,18 @@
 
 // 曲情報を格納する配列
 interface FetchSongInfo {
-  title: string
-  url: string
+  title: string;
+  url: string;
 }
 const songs: FetchSongInfo[] = [];
 
-const trNodesSnapshot = document.evaluate('/html/body/center/table[1]/tbody/tr', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+const trNodesSnapshot = document.evaluate(
+  "/html/body/center/table[1]/tbody/tr",
+  document,
+  null,
+  XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+  null
+);
 
 for (let i = 1; i < trNodesSnapshot.snapshotLength; i++) {
   const trNode = trNodesSnapshot.snapshotItem(i) as HTMLElement;
@@ -21,28 +27,31 @@ for (let i = 1; i < trNodesSnapshot.snapshotLength; i++) {
   // table構造に基づいて各難易度のリンクを取得
   const getLink = (td_index: number) => {
     const href = tdNodes[td_index].querySelector("a")?.getAttribute("href");
-    return href ? "https://textage.cc/score/"+href : undefined;
+    return href ? "https://textage.cc/score/" + href : undefined;
   };
   const splLink = getLink(0);
   const spaLink = getLink(1);
-  
+
   const titleNode = tdNodes[5];
   try {
     const titleText = titleNode ? titleNode.textContent || "" : "";
-    const title = titleText.replace(/[\n\t]/g, "").replace(/\s+/g, " ").trim();
+    const title = titleText
+      .replace(/[\n\t]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
     if (spaLink) {
-      songs.push({ title: title+"(A)", url: spaLink });
+      songs.push({ title: title + "(A)", url: spaLink });
     }
     if (splLink) {
-      songs.push({ title: title+"(L)", url: splLink });
+      songs.push({ title: title + "(L)", url: splLink });
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
 }
 
 const _textageSongInfos: { [title: string]: { url: string } } = {};
-songs.forEach(songInfo => {
+songs.forEach((songInfo) => {
   const { title, ...rest } = songInfo;
   _textageSongInfos[title] = rest;
 });

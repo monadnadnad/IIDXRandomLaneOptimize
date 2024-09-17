@@ -3,6 +3,9 @@ import { Container, Grid, ThemeProvider, createTheme } from "@mui/material";
 import TicketList from "./TicketList";
 import { Ticket } from "../ticket";
 import { HandSplitForm } from "./HandSplitForm";
+import { TextageForm, TextageFormValues, textageFormSchema } from "./TextageForm";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface ToolProps {
   tickets: Ticket[];
@@ -21,9 +24,6 @@ const theme = createTheme({
           position: "static",
           transform: "none",
           transition: "none",
-          pointerEvents: "auto",
-          cursor: "pointer",
-          display: "inline",
           alignSelf: "start",
           fontWeight: "bold",
         },
@@ -41,7 +41,7 @@ const theme = createTheme({
         },
         notchedOutline: {
           top: 0,
-          "legend" : {
+          legend: {
             display: "none",
           },
         },
@@ -51,13 +51,33 @@ const theme = createTheme({
 });
 
 const Tool: React.FC<ToolProps> = ({ tickets }) => {
+  const methods = useForm<TextageFormValues>({
+    resolver: zodResolver(textageFormSchema),
+    defaultValues: {
+      songTitle: "",
+      playerSide: "1P",
+      hispeed: 16,
+    },
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <Container sx={{ backgroundColor: "white", padding: 2, borderRadius: 2 }}>
-        <Grid container spacing={2} sx={{ backgroundColor: "#f5f5f5", padding: 2, borderRadius: 2, mb: 2 }}>
-          <HandSplitForm />
-        </Grid>
-        <TicketList tickets={tickets} />
+        <FormProvider {...methods}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ backgroundColor: "#f5f5f5", padding: 2, borderRadius: 2, mb: 2 }}
+          >
+            <Grid item xs={6}>
+              <HandSplitForm />
+            </Grid>
+            <Grid item xs={6}>
+              <TextageForm />
+            </Grid>
+          </Grid>
+          <TicketList tickets={tickets} />
+        </FormProvider>
       </Container>
     </ThemeProvider>
   );
