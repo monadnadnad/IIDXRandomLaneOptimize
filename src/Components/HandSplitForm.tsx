@@ -25,9 +25,13 @@ const schema = z.object({
   nonscratchSideAnyOrder: z.boolean().default(true),
 });
 
-type HandSplitFormValues = z.infer<typeof schema>;
+export type HandSplitFormValues = z.infer<typeof schema>;
 
-export const HandSplitForm = () => {
+interface HandSplitFormProps {
+  onSubmit: (formData: HandSplitFormValues) => void;
+}
+
+export const HandSplitForm: React.FC<HandSplitFormProps> = ({ onSubmit }) => {
   const {
     register,
     handleSubmit,
@@ -42,12 +46,8 @@ export const HandSplitForm = () => {
     resolver: zodResolver(schema),
   });
 
-  const _onSubmit = (formData: HandSplitFormValues) => {
-    console.log(formData);
-  };
-
   return (
-    <Box component="form" onSubmit={handleSubmit(_onSubmit)}>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
         <Grid item xs={12} sm={6}>
           <TextField

@@ -167,38 +167,37 @@ const generatePermutations = (arr: string[]): string[][] => {
 };
 
 export const makeHandSplitRuleSet = (
-  left: string,
-  right: string,
-  keep_order_left: boolean,
-  keep_order_right: boolean
+  scratchSideHand: string,
+  nonscratchSideHand: string,
+  scratchSideAnyOrder: boolean,
+  nonscratchSideAnyOrder: boolean
 ) => {
-  const LEFT_PATTERN = /[1-7*]{3}/;
-  const RIGHT_PATTERN = /[1-7*]{4}/;
-  if (!left.match(LEFT_PATTERN)) throw new Error(`皿側のルールが不正 ${left}`);
-  if (!right.match(RIGHT_PATTERN)) throw new Error(`非皿側のルールが不正 ${right}`);
+  const SCRATCH_SIDE_PATTERN = /[1-7*]{3}/;
+  const NONSCRATCH_SIDE_PATTERN = /[1-7*]{4}/;
+  if (!scratchSideHand.match(SCRATCH_SIDE_PATTERN)) throw new Error(`皿側のルールが不正 ${scratchSideHand}`);
+  if (!nonscratchSideHand.match(NONSCRATCH_SIDE_PATTERN)) throw new Error(`非皿側のルールが不正 ${nonscratchSideHand}`);
 
-  const left_rules = [left];
-  const right_rules = [right];
-  if (!keep_order_left) {
-    const left_chars = left.split("");
-    const left_permutations = generatePermutations(left_chars);
-    left_rules.push(...left_permutations.map((arr) => arr.join("")));
+  const scratchSideRules = [scratchSideHand];
+  const nonscratchSideRules = [nonscratchSideHand];
+  if (scratchSideAnyOrder) {
+    const scratchSideChars = scratchSideHand.split("");
+    const scratchSidePermutations = generatePermutations(scratchSideChars);
+    scratchSideRules.push(...scratchSidePermutations.map((arr) => arr.join("")));
   }
-  if (!keep_order_right) {
-    const right_chars = right.split("");
-    const right_permutations = generatePermutations(right_chars);
-    right_rules.push(...right_permutations.map((arr) => arr.join("")));
+  if (nonscratchSideAnyOrder) {
+    const nonscratchSideChars = nonscratchSideHand.split("");
+    const nonscratchSidePermutations = generatePermutations(nonscratchSideChars);
+    nonscratchSideRules.push(...nonscratchSidePermutations.map((arr) => arr.join("")));
   }
 
   const rules = [];
-  for (const left_rule of left_rules) {
-    for (const right_rule of right_rules) {
-      rules.push(new BasicAtariRule(left_rule + right_rule));
+  for (const scratchSideRule of scratchSideRules) {
+    for (const nonscratchSideRule of nonscratchSideRules) {
+      rules.push(new BasicAtariRule(scratchSideRule + nonscratchSideRule));
     }
   }
 
-  const ruleset = new AtariRuleSet(rules, "");
-  return ruleset;
+  return new AtariRuleSet(rules, "");
 };
 
 export {
