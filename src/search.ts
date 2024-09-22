@@ -174,8 +174,10 @@ export const makeHandSplitRuleSet = (
 ) => {
   const SCRATCH_SIDE_PATTERN = /[1-7*]{3}/;
   const NONSCRATCH_SIDE_PATTERN = /[1-7*]{4}/;
-  if (!scratchSideHand.match(SCRATCH_SIDE_PATTERN)) throw new Error(`皿側のルールが不正 ${scratchSideHand}`);
-  if (!nonscratchSideHand.match(NONSCRATCH_SIDE_PATTERN)) throw new Error(`非皿側のルールが不正 ${nonscratchSideHand}`);
+  if (!scratchSideHand.match(SCRATCH_SIDE_PATTERN))
+    throw new Error(`皿側のルールが不正 ${scratchSideHand}`);
+  if (!nonscratchSideHand.match(NONSCRATCH_SIDE_PATTERN))
+    throw new Error(`非皿側のルールが不正 ${nonscratchSideHand}`);
 
   const scratchSideRules = [scratchSideHand];
   const nonscratchSideRules = [nonscratchSideHand];

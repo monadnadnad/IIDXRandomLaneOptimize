@@ -75,14 +75,22 @@ const Tool: React.FC<ToolProps> = ({ tickets }) => {
   };
 
   const filterTickets = (tickets: Ticket[]): Ticket[] => {
-    const { scratchSideHand, nonscratchSideHand, scratchSideAnyOrder, nonscratchSideAnyOrder } = filterSetting;
+    const {
+      scratchSideHand,
+      nonscratchSideHand,
+      scratchSideAnyOrder,
+      nonscratchSideAnyOrder
+    } = filterSetting;
+    
     const rules = makeHandSplitRuleSet(
       scratchSideHand,
       nonscratchSideHand,
       scratchSideAnyOrder,
-      nonscratchSideAnyOrder);
-    return tickets.filter((ticket => rules.match(ticket.laneText)));
-  }
+      nonscratchSideAnyOrder
+    );
+    
+    return tickets.filter((ticket) => rules.match(ticket.laneText));
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -94,7 +102,7 @@ const Tool: React.FC<ToolProps> = ({ tickets }) => {
             sx={{ backgroundColor: "#f5f5f5", padding: 2, borderRadius: 2, mb: 2 }}
           >
             <Grid item xs={6}>
-              <HandSplitForm onSubmit={onSubmit}/>
+              <HandSplitForm onSubmit={onSubmit} />
             </Grid>
             <Grid item xs={6}>
               <TextageForm />
