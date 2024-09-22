@@ -28,17 +28,18 @@
     "prettier": "^3.3.2",
     "ts-jest": "^29.1.1",
     "typescript": "^4.9.5",
-    "vite": "^5.4.7"
+    "vite": "^5.4.7",
+    "vite-plugin-checker": "^0.8.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@extend-chrome/storage": "^1.5.0",
     "@hookform/resolvers": "^3.9.0",
-    "@mui/material": "^5.15.21",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
     "@types/chrome": "^0.0.244",
     "@types/react": "^18.2.21",
-    "@types/react-autosuggest": "^10.1.6",
     "@types/react-dom": "^18.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

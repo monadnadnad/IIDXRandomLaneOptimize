@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from "@vitejs/plugin-react";
 import { crx, defineManifest  } from "@crxjs/vite-plugin";
+import checker from "vite-plugin-checker";
 
 const manifest = defineManifest({
   manifest_version: 3,
@@ -23,6 +24,9 @@ const manifest = defineManifest({
 export default defineConfig({
   plugins: [
     react(),
+    checker({
+      typescript: true,
+    }),
     crx({ manifest }),
   ],
 });
